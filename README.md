@@ -1,4 +1,7 @@
 # bike-server
+
+REST service for project [bike](https://github.com/pieterprovoost/bike)
+
 ## Usage
 
 ```test
