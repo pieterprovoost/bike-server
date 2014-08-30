@@ -1,6 +1,5 @@
 package be.pieterprovoost.bike.server;
 
-
 import be.pieterprovoost.bike.engine.BikePoint;
 import be.pieterprovoost.bike.engine.Engine;
 import com.cedarsoftware.util.io.JsonWriter;
