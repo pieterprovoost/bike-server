@@ -1,6 +1,6 @@
 # bike-server
 
-REST service for project [bike](https://github.com/pieterprovoost/bike)
+JAX-RS REST service for finding a shortest path in the Toerisme Vlaanderen cyling network
 
 ## Usage
 
