@@ -26,28 +26,30 @@ public class BikeService {
     @Path("/path")
     @Produces("text/plain")
     public Response getPath(@QueryParam("from") String from, @QueryParam("to") String to) {
-        String begin = engine.getClosest(from);
-        String end = engine.getClosest(to);
+        String begin;
+        String end;
+        try {
+            begin = engine.getClosest(from);
+            end = engine.getClosest(to);
+        } catch (Exception e) {
+            return Response.status(422).build();
+        }
         List<BikePoint> path = engine.getPath(begin, end);
-
         JSONObject o = new JSONObject();
         JSONArray a = new JSONArray();
-
         for (BikePoint point : path) {
             JSONObject p = new JSONObject();
             p.put("number", point.getNumber());
             p.put("distance", point.getDistance());
             a.put(p);
         }
-
         o.put("path", a);
         String output = o.toString();
         try {
             output = JsonWriter.formatJson(o.toString());
         } catch (Exception e) {
-            e.printStackTrace();
+            return Response.status(500).build();
         }
-
         return Response.status(200).entity(output).build();
     }
 
