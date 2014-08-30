@@ -2,14 +2,14 @@ package be.pieterprovoost.bike.server;
 
 import be.pieterprovoost.bike.engine.BikePoint;
 import be.pieterprovoost.bike.engine.Engine;
-import com.cedarsoftware.util.io.JsonWriter;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.jaxrs.json.annotation.JacksonFeatures;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
@@ -24,7 +24,8 @@ public class BikeService {
 
     @GET
     @Path("/path")
-    @Produces("text/plain")
+    @JacksonFeatures(serializationEnable =  { SerializationFeature.INDENT_OUTPUT })
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getPath(@QueryParam("from") String from, @QueryParam("to") String to) {
         String begin;
         String end;
@@ -35,22 +36,7 @@ public class BikeService {
             return Response.status(422).build();
         }
         List<BikePoint> path = engine.getPath(begin, end);
-        JSONObject o = new JSONObject();
-        JSONArray a = new JSONArray();
-        for (BikePoint point : path) {
-            JSONObject p = new JSONObject();
-            p.put("number", point.getNumber());
-            p.put("distance", point.getDistance());
-            a.put(p);
-        }
-        o.put("path", a);
-        String output = o.toString();
-        try {
-            output = JsonWriter.formatJson(o.toString());
-        } catch (Exception e) {
-            return Response.status(500).build();
-        }
-        return Response.status(200).entity(output).build();
+        return Response.status(200).entity(path).build();
     }
 
 }
