@@ -3,6 +3,8 @@ package be.pieterprovoost.bike.server;
 import be.pieterprovoost.bike.engine.BikePoint;
 import be.pieterprovoost.bike.engine.Engine;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.fasterxml.jackson.jaxrs.json.annotation.JSONP;
 import com.fasterxml.jackson.jaxrs.json.annotation.JacksonFeatures;
 
 import javax.ws.rs.GET;
@@ -26,7 +28,7 @@ public class BikeService {
     @Path("/path")
     @JacksonFeatures(serializationEnable =  { SerializationFeature.INDENT_OUTPUT })
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getPath(@QueryParam("from") String from, @QueryParam("to") String to) {
+    public Response getPath(@QueryParam("from") String from, @QueryParam("to") String to, @QueryParam("callback") String callback) {
         String begin;
         String end;
         try {
@@ -36,6 +38,10 @@ public class BikeService {
             return Response.status(422).build();
         }
         List<BikePoint> path = engine.getPath(begin, end);
+        if (callback != null) {
+            JSONPObject jpo = new JSONPObject(callback, path);
+            return Response.status(200).entity(jpo).build();
+        }
         return Response.status(200).entity(path).build();
     }
 
