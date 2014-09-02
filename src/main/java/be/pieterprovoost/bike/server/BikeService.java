@@ -4,7 +4,6 @@ import be.pieterprovoost.bike.engine.BikePoint;
 import be.pieterprovoost.bike.engine.Engine;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.JSONPObject;
-import com.fasterxml.jackson.jaxrs.json.annotation.JSONP;
 import com.fasterxml.jackson.jaxrs.json.annotation.JacksonFeatures;
 
 import javax.ws.rs.GET;
@@ -32,8 +31,22 @@ public class BikeService {
         String begin;
         String end;
         try {
-            begin = engine.getClosest(from);
-            end = engine.getClosest(to);
+            if (from.matches("[0-9]+\\.[0-9]+,[0-9]+\\.[0-9]+")) {
+                String[] parts = from.split(",");
+                Double latitude = Double.parseDouble(parts[0]);
+                Double longitude = Double.parseDouble(parts[1]);
+                begin = engine.getClosest(latitude, longitude);
+            } else {
+                begin = engine.getClosest(from);
+            }
+            if (to.matches("[0-9]+\\.[0-9]+,[0-9]+\\.[0-9]+")) {
+                String[] parts = to.split(",");
+                Double latitude = Double.parseDouble(parts[0]);
+                Double longitude = Double.parseDouble(parts[1]);
+                end = engine.getClosest(latitude, longitude);
+            } else {
+                end = engine.getClosest(to);
+            }
         } catch (Exception e) {
             return Response.status(422).build();
         }
