@@ -7,6 +7,7 @@ JAX-RS REST service for finding a shortest path in the Toerisme Vlaanderen cylin
 ```test
 http://127.0.0.1:8080/bike-server/api/path?from=veldegem&to=51.1835521,3.4478647
 http://127.0.0.1:8080/bike-server/api/path?from=veldegem&to=brugge
+http://127.0.0.1:8080/bike-server/api/path?from=veldegem&to=brugge&callback=?
 ```
 
 ### Output
